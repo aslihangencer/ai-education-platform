@@ -78,7 +78,7 @@ You can access detailed planning files below:
  Bash
 npx prisma db push
 
----
+
  Run the project:
  ---- 
  Bash 

@@ -88,6 +88,7 @@ npx prisma db push
 npx prisma generate 
 
 ## 5. Run Development Server
+
 Bash
 npm run dev
 

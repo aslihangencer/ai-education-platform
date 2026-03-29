@@ -51,41 +51,47 @@ You can access detailed planning files below:
 📄 tech-stack.md - Detailed technology stack.
 
 
-## 🛠 Installation (For Developers) 
-  ----
- Clone the repository:
- --- 
- Bash git clone https://github.com/your-username/accessible-academy.git 
+## 🛠  Installation & Setup
 
- Install dependencies:
+### 1. Clone the Repository
 ---
- Bash 
- npm install 
+bash
+git clone [https://github.com/your-username/accessible-academy.git](https://github.com/your-username/accessible-academy.git)
+cd accessible-academy 
+### 2. Install Dependencie
+---
+Bash
+npm install
+### 3. Environment Configuration:
+Create a .env.local file in the root directory and add the following:
+# Variable           # Description
+--
+DATABASE_URL                      Supabase PostgreSQL connection string.
 
- Create a .env.local file and add the required API keys (Supabase, OpenAI, Google).
- ---
- | Variable | Description |
- 
-| :--- | :--- |
+--
+NEXTAUTH_SECRET                   Run openssl rand -base64 32 to generate.
 
-| `OPENAI_API_KEY` | Your OpenAI API Secret Key |
+--
+GOOGLE_CLIENT_ID                  Google Cloud OAuth Client ID.
 
-| `DATABASE_URL` | Supabase or local Postgres connection string |
+----
+GOOGLE_CLIENT_SECRET              Google Cloud OAuth Client Secret.
 
-| `NEXTAUTH_SECRET` | Secret key for session encryption |
+--
+GOOGLE_GEMINI_API_KEY             GOOGLE_GEMINI_API_KEY
 
- Prisma/Database:
- ---
- Bash
+## 4. Database Initialization
+Sync your Prisma schema and generate the client:
+
+Bash
 npx prisma db push
+npx prisma generate 
 
+## 5. Run Development Server
+Bash
+npm run dev
 
- Run the project:
- ---- 
- Bash 
- npm run dev
- 
----
+--
 ## 💡 Why This Project?
 Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."
 ## 📄 License

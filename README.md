@@ -65,7 +65,7 @@ Bash
 npm install
 ### 3. Environment Configuration:
 Create a .env.local file in the root directory and add the following:
-# Variable                          # Description
+# Variable       ------------------                    Description
 -----
 DATABASE_URL         ------------------> Supabase PostgreSQL connection string.
 
@@ -91,7 +91,7 @@ npx prisma generate
 Bash
 npm run dev
 
---
+
 ## 💡 Why This Project?
 Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."
 ## 📄 License

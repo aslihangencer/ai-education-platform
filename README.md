@@ -1,47 +1,70 @@
-# AI Education Platform 🎓
+🌟 Accessible Academy (Engelsiz Akademi)
+AI-Powered, Equitable Education Platform for Visually Impaired Individuals.
 
-A modern, student-centric learning platform that uses AI to transform PDF study materials into interactive, multimodal lessons. 
+Accessible Academy is an end-to-end solution platform that eliminates barriers for visually impaired students to access educational materials and connects them with the right instructors.
 
-## 🚀 Overview
-This platform allows students to upload PDFs, which are then processed using AI to generate structured lessons, key points, and Q&A sessions. It also features AI-powered audio narration to support different learning styles and accessibility.
+🚀 Key Features
+1. Voice-Centric Instructor Panel
+Audio Profiles: Instructors introduce themselves via audio and upload sample problem-solving recordings.
 
-## ✨ Core Features
-- **Student Dashboard**: 
-  - **PDF to Lesson**: Upload academic PDFs and get AI-generated study guides.
-  - **Audio Narration**: Listen to your lessons with accessible playback controls.
-  - **Structured Learning**: Clear steps, key points, and Q&A for better retention.
-- **Teacher Panel** (In Development):
-  - **Teaching Guidelines**: Manage curriculum-aligned instructions for the AI.
-  - **Practice Mode**: Configure specialized learning paths.
-  - **Weekly Scheduling**: Organize study sessions.
+Select by Hearing: Students choose instructors not just by reading text, but by hearing their voices and teaching styles.
 
-## 🛠 Tech Stack
-- **Framework**: Next.js 14+ (App Router)
-- **Language**: TypeScript
-- **AI Integration**: OpenAI (GPT-4o / GPT-4o-mini)
-- **Audio**: OpenAI TTS (Text-to-Speech)
-- **Parsing**: `pdf-parse` for document extraction
-- **Styling**: Vanilla CSS with Accessibility-first design
+Google Meet Integration: One-click lesson scheduling with automated, accessible meeting links.
 
-## 🛠 Setup & Installation
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up environment variables:
-   Copy `.env.example` to `.env.local` and add your OpenAI API Key.
-4. Run the development server:
-   ```bash
-   npm run dev
-   ```
-5. Open [http://localhost:3000](http://localhost:3000) to view the app.
+2. AI-Powered Material Transformation
+PDF to Audiobook: Academic PDFs are analyzed, cleaned, and converted into audiobooks using natural-sounding AI voices.
 
-## 📁 Project Structure
-- `/app`: Next.js App Router pages and API routes.
-- `/components`: Reusable UI components (Student, Teacher, Accessibility).
-- `/lib`: Core logic including AI prompt engineering and server utilities.
-- `/lib/server`: Server-side only logic for secure API calls.
+Interactive AI Study Buddy: Students can ask questions to the AI about uploaded materials, solve tests verbally, and get hints for challenging parts.
 
+3. Full Accessibility (A11y)
+Built in compliance with WCAG 2.1 standards.
+
+Full compatibility with screen readers (NVDA, Jaws, VoiceOver).
+
+100% keyboard-controllable interface.
+
+🛠 Tech Stack
+Frontend: Next.js 14 (App Router), Tailwind CSS, Radix UI (Accessible Components)
+
+Backend & DB: Supabase (Auth, PostgreSQL, Storage)
+
+Artificial Intelligence:
+
+LLM: Gemini 1.5 Pro (PDF analysis and intelligent assistant)
+
+TTS: OpenAI TTS / Google Cloud Text-to-Speech (Natural narration)
+
+Integration: Google Calendar & Meet API
+
+📁 Project Documentation
+You can access detailed planning files below:
+
+📄 idea.md - Project vision and problem definition.
+
+📄 prd.md - Product Requirements Document.
+
+📄 tasks.md - Development process task list.
+
+📄 user-flow.md - User experience flow.
+
+📄 tech-stack.md - Detailed technology stack.
+
+🛠 Installation (For Developers)
+Clone the repository:
+
+Bash
+git clone https://github.com/your-username/accessible-academy.git
+Install dependencies:
+
+Bash
+npm install
+Create a .env.local file and add the required API keys (Supabase, OpenAI, Google).
+
+Run the project:
+
+Bash
+npm run dev
+💡 Why This Project?
+Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."
 ## 📄 License
 MIT License

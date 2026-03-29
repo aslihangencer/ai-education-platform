@@ -50,6 +50,7 @@ You can access detailed planning files below:
 
 📄 tech-stack.md - Detailed technology stack.
 
+
 ## 🛠 Installation (For Developers) 
   
  Clone the repository:
@@ -83,6 +84,7 @@ npx prisma db push
  ---- 
  Bash 
  npm run dev
+
 
 
 ## 💡 Why This Project?

@@ -54,31 +54,31 @@ You can access detailed planning files below:
 ## 🛠  Installation & Setup
 
 ### 1. Clone the Repository
----
+
 bash
-git clone [https://github.com/your-username/accessible-academy.git](https://github.com/your-username/accessible-academy.git)
+git clone [https://github.com/aslihangencer/accessible-academy.git](https://github.com/your-username/accessible-academy.git)
 cd accessible-academy 
 ### 2. Install Dependencie
----
+
+
 Bash
 npm install
 ### 3. Environment Configuration:
 Create a .env.local file in the root directory and add the following:
-# Variable           # Description
---
-DATABASE_URL                      Supabase PostgreSQL connection string.
+# Variable                          # Description
+-----
+DATABASE_URL         ------------------> Supabase PostgreSQL connection string.
 
---
-NEXTAUTH_SECRET                   Run openssl rand -base64 32 to generate.
 
---
-GOOGLE_CLIENT_ID                  Google Cloud OAuth Client ID.
+NEXTAUTH_SECRET       ------------------> Run openssl rand -base64 32 to generate.
 
-----
-GOOGLE_CLIENT_SECRET              Google Cloud OAuth Client Secret.
 
---
-GOOGLE_GEMINI_API_KEY             GOOGLE_GEMINI_API_KEY
+GOOGLE_CLIENT_ID      ------------------>  Google Cloud OAuth Client ID.
+
+GOOGLE_CLIENT_SECRET   ------------------>  Google Cloud OAuth Client Secret.
+
+
+GOOGLE_GEMINI_API_KEY   ------------------> GOOGLE_GEMINI_API_KEY
 
 ## 4. Database Initialization
 Sync your Prisma schema and generate the client:

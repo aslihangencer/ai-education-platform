@@ -52,7 +52,7 @@ You can access detailed planning files below:
 
 
 ## 🛠 Installation (For Developers) 
-  
+  ----
  Clone the repository:
  --- 
  Bash git clone https://github.com/your-username/accessible-academy.git 
@@ -84,9 +84,8 @@ npx prisma db push
  ---- 
  Bash 
  npm run dev
-
-
-
+ 
+---
 ## 💡 Why This Project?
 Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."
 ## 📄 License

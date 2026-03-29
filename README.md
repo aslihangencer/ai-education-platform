@@ -65,7 +65,7 @@ Bash
 npm install
 ### 3. Environment Configuration:
 Create a .env.local file in the root directory and add the following:
-# Variable       ------------------                    Description
+# Variable       --------                   Description
 -----
 DATABASE_URL         ------------------> Supabase PostgreSQL connection string.
 

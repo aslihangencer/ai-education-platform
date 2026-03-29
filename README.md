@@ -56,12 +56,14 @@ You can access detailed planning files below:
 ### 1. Clone the Repository
 
 bash
-git clone [https://github.com/aslihangencer/accessible-academy.git](https://github.com/your-username/accessible-academy.git)
+
+git clone [https://github.com/aslihangencer/accessible-academy.git](https://github.com/aslihangencer/accessible-academy.git)
 cd accessible-academy 
 ### 2. Install Dependencie
 
 
 Bash
+
 npm install
 ### 3. Environment Configuration:
 Create a .env.local file in the root directory and add the following:
@@ -84,7 +86,9 @@ GOOGLE_GEMINI_API_KEY   ------------------> GOOGLE_GEMINI_API_KEY
 Sync your Prisma schema and generate the client:
 
 Bash
+
 npx prisma db push
+
 npx prisma generate 
 
 ## 5. Run Development Server

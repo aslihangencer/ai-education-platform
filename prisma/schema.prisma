@@ -1,0 +1,76 @@
+// Prisma Schema for AI Education Platform
+// Optimized for accessibility features and AI-generated metadata
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+enum LessonStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+}
+
+model LessonRequest {
+  id              String       @id @default(uuid())
+  title           String
+  startTime       DateTime
+  endTime         DateTime
+  status          LessonStatus @default(PENDING)
+  meetLink        String?
+  calendarEventId String?
+  teacherId       String
+  teacher         User         @relation("TeacherRequests", fields: [teacherId], references: [id])
+  studentId       String
+  student         User         @relation("StudentRequests", fields: [studentId], references: [id])
+  createdAt       DateTime     @default(now())
+}
+
+model User {
+  id              String          @id @default(uuid())
+  name            String
+  email           String          @unique
+  role            Role            @default(STUDENT)
+  preferredSpeed  Float           @default(1.0)
+  highContrast    Boolean         @default(false)
+  notes           Note[]
+  submissions     Submission[]
+  teacherRequests LessonRequest[] @relation("TeacherRequests")
+  studentRequests LessonRequest[] @relation("StudentRequests")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Note {
+  id               String   @id @default(uuid())
+  title            String
+  textContent      String   @db.Text
+  audioUrl         String?  // Link to the lesson's audio version
+  aiDescription    String?  @db.Text // VLM generated description for visuals
+  brailleBuffer    String?  @db.Text // Pre-formatted Braille-ready text
+  createdAt        DateTime @default(now())
+  authorId         String
+  author           User     @relation(fields: [authorId], references: [id])
+}
+
+model Submission {
+  id               String   @id @default(uuid())
+  studentId        String
+  student          User     @relation(fields: [studentId], references: [id])
+  content          String   @db.Text // Transcribed text from student's voice
+  audioFeedback    String?  // Link to teacher's voice feedback
+  grade            String?
+  accessibilityScore Float?  // AI-calculated accessibility health of the submission
+  createdAt        DateTime @default(now())
+}

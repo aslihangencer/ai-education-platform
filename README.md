@@ -2,6 +2,7 @@
 AI-Powered, Equitable Education Platform for Visually Impaired Individuals.
 
 Accessible Academy is an end-to-end solution platform that eliminates barriers for visually impaired students to access educational materials and connects them with the right instructors.
+## ![Screenshot](./public/screenshot.png)
 
 ### 🚀 Key Features
 # 1. Voice-Centric Instructor Panel
@@ -49,23 +50,41 @@ You can access detailed planning files below:
 
 📄 tech-stack.md - Detailed technology stack.
 
-## 🛠 Installation (For Developers)
-Clone the repository:
+## 🛠 Installation (For Developers) 
+  ----
+ Clone the repository:
+ --- 
+ Bash git clone https://github.com/your-username/accessible-academy.git 
+
+ Install dependencies:
 ---
-Bash
-git clone https://github.com/your-username/accessible-academy.git
-----
-Install dependencies:
-----
-Bash
-npm install
-Create a .env.local file and add the required API keys (Supabase, OpenAI, Google).
+ Bash 
+ npm install 
+
+ Create a .env.local file and add the required API keys (Supabase, OpenAI, Google).
+ ---
+ | Variable | Description |
+ 
+| :--- | :--- |
+
+| `OPENAI_API_KEY` | Your OpenAI API Secret Key |
+
+| `DATABASE_URL` | Supabase or local Postgres connection string |
+
+| `NEXTAUTH_SECRET` | Secret key for session encryption |
+
+ Prisma/Database:
+ ---
+ Bash
+npx prisma db push
+
 ---
-Run the project:
-----
-Bash
-npm run dev
----
+ Run the project:
+ ---- 
+ Bash 
+ npm run dev
+
+ ----
 
 ## 💡 Why This Project?
 Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."

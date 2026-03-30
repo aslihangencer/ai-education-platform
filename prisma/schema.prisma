@@ -6,9 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 enum Role {
@@ -214,4 +212,13 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model AICache {
+  id        String   @id @default(cuid())
+  hash      String   @unique // PDF içeriğinin hash'i
+  summary   String   @db.Text
+  audioUrl  String?  // Üretilen OpenAI TTS linki
+  createdAt DateTime @default(now())
+  expiresAt DateTime // 24 saat sonra silinmesi için (Token Saver)
 }

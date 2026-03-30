@@ -1,12 +1,10 @@
+import path from "node:path";
 import { defineConfig } from "@prisma/config";
 import dotenv from "dotenv";
-dotenv.config();
 
-console.log("DIRECT_URL from dotenv:", process.env.DIRECT_URL);
+// Prisma v7: .env dosyasını açıkça yüklüyoruz
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
-  datasource: {
-    url: process.env.DIRECT_URL as string,
-  },
 });

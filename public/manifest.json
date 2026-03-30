@@ -1,0 +1,16 @@
+{
+  "name": "Smart ED Akıllı Eğitim",
+  "short_name": "Smart ED",
+  "description": "Görme engelliler için yüksek erişilebilirlikli eğitim platformu",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

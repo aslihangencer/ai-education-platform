@@ -1,76 +1,217 @@
-// Prisma Schema for AI Education Platform
-// Optimized for accessibility features and AI-generated metadata
+// Prisma Schema for Accessible Academy (Engelsiz Akademi)
+// Optimized for Next.js 15, Supabase, and AI-driven accessibility (EduPro v2.5)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 enum Role {
   STUDENT
   TEACHER
+  ADMIN
 }
 
-enum LessonStatus {
+enum AppointmentStatus {
   PENDING
   ACCEPTED
   DECLINED
   CANCELLED
+  COMPLETED
 }
 
-model LessonRequest {
-  id              String       @id @default(uuid())
-  title           String
-  startTime       DateTime
-  endTime         DateTime
-  status          LessonStatus @default(PENDING)
-  meetLink        String?
-  calendarEventId String?
-  teacherId       String
-  teacher         User         @relation("TeacherRequests", fields: [teacherId], references: [id])
-  studentId       String
-  student         User         @relation("StudentRequests", fields: [studentId], references: [id])
-  createdAt       DateTime     @default(now())
+enum MaterialType {
+  PDF
+  AUDIO
+  TEXT
+  IMAGE
 }
 
 model User {
-  id              String          @id @default(uuid())
-  name            String
-  email           String          @unique
-  role            Role            @default(STUDENT)
-  preferredSpeed  Float           @default(1.0)
-  highContrast    Boolean         @default(false)
-  notes           Note[]
-  submissions     Submission[]
-  teacherRequests LessonRequest[] @relation("TeacherRequests")
-  studentRequests LessonRequest[] @relation("StudentRequests")
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id                  String          @id @default(uuid())
+  name                String?
+  email               String          @unique
+  emailVerified       DateTime?
+  password            String?
+  image               String?
+  role                Role            @default(STUDENT)
+  
+  // Accessibility Preferences
+  highContrast        Boolean         @default(false)
+  preferredTtsSpeed   Float           @default(1.0)
+  isVoiceActive       Boolean         @default(true)
+  
+  // Mentorship (if TEACHER)
+  voiceProfile        VoiceProfile?
+  
+  // Relationships
+  materials           Material[]      @relation("UserMaterials")
+  appointmentsAsTeacher Appointment[] @relation("TeacherAppointments")
+  appointmentsAsStudent Appointment[] @relation("StudentAppointments")
+  reviewsGiven        Review[]        @relation("ReviewAuthor")
+  reviewsReceived     Review[]        @relation("ReviewSubject")
+  
+  // EduPro v2.5 Relationships
+  studentResults      Result[]        @relation("StudentResults")
+  studentLogs         LessonLog[]     @relation("StudentLogs")
+  teacherLogs         LessonLog[]     @relation("TeacherLogs")
+  
+  accounts            Account[]
+  sessions            Session[]
+  
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 }
 
-model Note {
-  id               String   @id @default(uuid())
+model SystemConfig {
+  key   String @id // e.g., "global_stats"
+  value Json   // { "totalSolved": 12450, "totalHours": 450, "activeStudents": 85 }
+}
+
+model VoiceProfile {
+  id            String   @id @default(uuid())
+  accent        String?  // e.g., "British", "American"
+  language      String   @default("tr-TR") // e.g., "tr-TR", "en-US"
+  dialect       String?  // e.g., "Aegean", "London"
+  aiConfig      Json?    // For OpenAI/Gemini voice specific settings
+  sampleUrl     String?  // Audio sample of the voice/mentor
+  
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Material {
+  id               String       @id @default(uuid())
   title            String
-  textContent      String   @db.Text
-  audioUrl         String?  // Link to the lesson's audio version
-  aiDescription    String?  @db.Text // VLM generated description for visuals
-  brailleBuffer    String?  @db.Text // Pre-formatted Braille-ready text
-  createdAt        DateTime @default(now())
-  authorId         String
-  author           User     @relation(fields: [authorId], references: [id])
+  type             MaterialType @default(PDF)
+  url              String       // Storage link (Supabase Storage)
+  
+  // AI Metadata (Gemini Analysis)
+  aiSummary        String?      @db.Text
+  aiDescription    String?      @db.Text // High-level VLM description
+  structuredContent Json?        // JSON of headings/topics for easy navigation
+  
+  // EduPro v2.5 Exams
+  exams            Exam[]
+  
+  ownerId          String
+  owner            User         @relation("UserMaterials", fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
 
-model Submission {
-  id               String   @id @default(uuid())
-  studentId        String
-  student          User     @relation(fields: [studentId], references: [id])
-  content          String   @db.Text // Transcribed text from student's voice
-  audioFeedback    String?  // Link to teacher's voice feedback
-  grade            String?
-  accessibilityScore Float?  // AI-calculated accessibility health of the submission
-  createdAt        DateTime @default(now())
+model Appointment {
+  id              String            @id @default(uuid())
+  title           String
+  startTime       DateTime
+  endTime         DateTime
+  status          AppointmentStatus @default(PENDING)
+  meetLink        String?           // Automated Google Meet Link
+  
+  teacherId       String
+  teacher         User              @relation("TeacherAppointments", fields: [teacherId], references: [id])
+  studentId       String
+  student         User              @relation("StudentAppointments", fields: [studentId], references: [id])
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model LessonLog {
+  id              String   @id @default(cuid())
+  date            DateTime
+  bookName        String
+  pagesRead       Int
+  questionsSolved Int
+  duration        Int      // In minutes
+  createdAt       DateTime @default(now())
+  
+  teacherId       String
+  teacher         User     @relation("TeacherLogs", fields: [teacherId], references: [id])
+  studentId       String
+  student         User     @relation("StudentLogs", fields: [studentId], references: [id])
+}
+
+model Exam {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  content     Json     // Gemini'den gelen {questions: []} formatında
+  createdAt   DateTime @default(now())
+  
+  materialId  String
+  material    Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  results     Result[]
+}
+
+model Result {
+  id            String   @id @default(cuid())
+  score         Int
+  correctCount  Int?
+  wrongCount    Int?
+  completedAt   DateTime @default(now())
+  
+  studentId     String
+  student       User     @relation("StudentResults", fields: [studentId], references: [id], onDelete: Cascade)
+  examId        String
+  exam          Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  rating        Int      // 1-5
+  comment       String?  @db.Text
+  audioReviewUrl String? // Optional voice review link
+  
+  authorId      String
+  author        User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  subjectId     String
+  subject       User     @relation("ReviewSubject", fields: [subjectId], references: [id])
+  
+  createdAt     DateTime @default(now())
+}
+
+// NextAuth Required Models
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

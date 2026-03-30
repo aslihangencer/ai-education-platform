@@ -1,41 +1,75 @@
-import { LinkButton } from '../components/ui/LinkButton';
-export default function Home() {
-  return (
-    <div className="homeContainer" style={{ maxWidth: 1200, margin: '0 auto', padding: '100px 24px', textAlign: 'center' }}>
-      <header className="heroSection">
-        <div className="badge" style={{ display: 'inline-block', padding: '6px 16px', background: 'var(--primary-soft)', color: 'var(--primary)', borderRadius: 20, fontSize: 13, fontWeight: 700, marginBottom: 24, border: '1px solid var(--primary)' }}>
-          YENİ: GEMINI 1.5 PRO DESTEKLİ
-        </div>
-        <h1 className="title" style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: 24, letterSpacing: '-0.02em' }}>
-          Eğitimde <span style={{ color: 'var(--primary)', background: 'linear-gradient(45deg, var(--primary), #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Erişilebilir</span> Gelecek
-        </h1>
-        <p className="subtitle" style={{ fontSize: 20, maxWidth: 640, margin: '0 auto 40px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-          Görme engelli öğrenciler ve öğretmenler için tasarlanmış, yapay zeka destekli, tam erişilebilir akıllı eğitim asistanı.
-        </p>
-        
-        <div className="ctaGroup" style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 60 }}>
-          <a href="/student" className="btn btnPrimary" style={{ padding: '16px 32px', fontSize: 16 }}>Öğrenci Girişi</a>
-          <a href="/teacher" className="btn btnSecondary" style={{ padding: '16px 32px', fontSize: 16 }}>Eğitmen Girişi</a>
-        </div>
-      </header>
+'use client';
 
-      <div className="featureGrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, marginTop: 100 }}>
-        {[
-          { icon: '🎙️', title: 'Akıllı Seslendirme', desc: 'Ders kitaplarını anında yüksek kaliteli podcastlere dönüştürün.' },
-          { icon: '🤖', title: 'Proaktif Koçluk', desc: 'Yapay zeka asistanınız dersleri özetler ve sorularınızı yanıtlar.' },
-          { icon: '📅', title: 'Otomatik Planlama', desc: 'Google Meet entegrasyonu ile derslerinizi kolayca yönetin.' },
-        ].map((f, i) => (
-          <div key={i} className="card" style={{ padding: 32, textAlign: 'left', border: '1px solid var(--border)', transition: 'transform 0.2s', cursor: 'default' }}>
-            <div style={{ fontSize: 32, marginBottom: 16 }}>{f.icon}</div>
-            <h3 className="placeholderHeading" style={{ fontSize: 20, marginBottom: 12 }}>{f.title}</h3>
-            <p className="helpText" style={{ fontSize: 15, lineHeight: 1.5 }}>{f.desc}</p>
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { BrainCircuit, GraduationCap, User, ArrowRight } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+
+export default function LandingPage() {
+  const router = useRouter();
+
+  return (
+    <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden font-sans">
+      
+      {/* Decorative Blur Orbs */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-100/60 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-100/60 rounded-full blur-[120px] pointer-events-none -z-10" />
+
+      <div className="w-full max-w-4xl max-auto space-y-16">
+        
+        {/* BRANDING HEADER */}
+        <header className="flex flex-col items-center text-center space-y-6">
+          <div className="bg-blue-600 p-4 rounded-3xl shadow-xl shadow-blue-600/20">
+            <BrainCircuit size={48} className="text-white" />
           </div>
-        ))}
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase italic flex items-center justify-center mb-2">
+              Erişilebilir<span className="text-blue-600">AI</span>
+            </h1>
+            <p className="text-2xl text-slate-500 font-medium">Hangi paneli kullanmak istiyorsunuz?</p>
+          </div>
+        </header>
+
+        {/* ROLE SELECTION CARDS */}
+        <div className="grid md:grid-cols-2 gap-8">
+          
+          {/* STUDENT BUTTON CARDS */}
+          <button 
+            onClick={() => router.push('/student')}
+            className="text-left w-full focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-600/50 rounded-3xl transition-all hover:scale-[1.02] active:scale-95 group"
+            aria-label="Öğrenci Paneline Git"
+          >
+            <Card className="h-full border-2 border-slate-200 group-hover:border-blue-500 group-hover:shadow-2xl group-active:border-blue-600 transition-all p-8 md:p-10 flex flex-col items-center gap-6">
+              <div className="bg-blue-50 text-blue-600 p-8 rounded-[2rem] group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                <GraduationCap size={64} />
+              </div>
+              <div className="text-center">
+                <h2 className="text-3xl font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">Öğrenci Paneli</h2>
+                <p className="text-xl text-slate-500 font-medium">Öğrenme araçları, sesli notlar ve AI mentor asistanına erişin.</p>
+              </div>
+            </Card>
+          </button>
+
+          {/* TEACHER BUTTON CARD */}
+          <button 
+            onClick={() => router.push('/teacher')}
+            className="text-left w-full focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-600/50 rounded-3xl transition-all hover:scale-[1.02] active:scale-95 group"
+            aria-label="Öğretmen Paneline Git"
+          >
+            <Card className="h-full border-2 border-slate-200 group-hover:border-indigo-500 group-hover:shadow-2xl group-active:border-indigo-600 transition-all p-8 md:p-10 flex flex-col items-center gap-6">
+              <div className="bg-indigo-50 text-indigo-600 p-8 rounded-[2rem] group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                <User size={64} />
+              </div>
+              <div className="text-center">
+                <h2 className="text-3xl font-black text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">Eğitmen Paneli</h2>
+                <p className="text-xl text-slate-500 font-medium">Öğrencileri yönet, ders takvimini planla ve ödevleri değerlendir.</p>
+              </div>
+            </Card>
+          </button>
+
+        </div>
       </div>
 
-      <footer style={{ marginTop: 120, paddingTop: 40, borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: 14 }}>
-        © 2026 Smart Ed: Accessible Learning. Tüm hakları saklıdır.
-      </footer>
-    </div>
+    </main>
   );
 }

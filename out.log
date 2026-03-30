@@ -1,0 +1,37 @@
+﻿[dotenv@17.3.1] injecting env (10) from .env -- tip: ÔÜÖ´©Å  override existing env vars with { override: true }
+DIRECT_URL from dotenv: postgresql://postgres.mcyipbdsslqiazkxylur:Defne123ALO@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres
+node.exe : Loaded Prisma c
+onfig from prisma.config.t
+s.
+At line:1 char:1
++ & "C:\Program Files\node
+js/node.exe" "C:\Program F
+iles\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (L  
+  oaded Prisma c...isma   
+ .config.ts.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+
+Prisma schema loaded from 
+prisma\schema.prisma.
+Datasource "db": PostgreSQL database "postgres", schema "public" at "aws-1-ap-northeast-1.pooler.supabase.com:5432"
+
+Error: P1000: Authenticati
+on failed against database
+ server, the provided data
+base credentials for `post
+gres` are not valid.
+
+Please make sure to provid
+e valid database credentia
+ls for the database server
+ at the configured address
+.

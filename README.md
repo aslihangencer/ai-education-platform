@@ -57,7 +57,7 @@ You can access detailed planning files below:
 
 bash
 
-git clone [[https://github.com/aslihangencer/accessible-academy.git](https://github.com/aslihangencer/accessible-academy.git](https://github.com/aslihangencer/ai-education-platform/tree/main))
+git clone [[https://github.com/aslihangencer/accessible-academy.git](https://github.com/aslihangencer/accessible-academy.git](https://github.com/aslihangencer/ai-education-platform/tree/main))]
 cd accessible-academy 
 ### 2. Install Dependencie
 

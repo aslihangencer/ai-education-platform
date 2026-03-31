@@ -1,143 +1,149 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { prisma } from '../lib/prisma.js'
 
-const prisma = new PrismaClient();
-
-/**
- * prisma/seed.ts:
- * Generates a comprehensive 3-month demo data set (Jan-Mar 2026) 
- * to showcase the 'Living Academy' dashboard features.
- */
 async function main() {
-  console.log("🌱 Temizlik başlatılıyor...");
-  
-  // 1. Delete existing logs/results/exams to prevent primary key collisions in demo
-  await prisma.lessonLog.deleteMany();
-  await prisma.result.deleteMany();
-  await prisma.appointment.deleteMany();
-  await prisma.systemConfig.deleteMany();
-  
-  console.log("✅ Eski veriler temizlendi. Demo veriler yükleniyor...");
+  console.log('🌱 Seeding database...')
 
-  // 2. Create or find the Primary Teacher
-  const teacher = await prisma.user.upsert({
-    where: { email: 'hoca@akademi.com' },
-    update: {},
-    create: {
-      id: 'teacher-demo-01',
-      name: "Dr. Ahmet Arslan",
-      email: 'hoca@akademi.com',
-      role: Role.TEACHER,
-      highContrast: false,
+  // 👩‍🏫 Teachers (10)
+  const teachers = await Promise.all(
+    Array.from({ length: 10 }).map((_, i) =>
+      prisma.user.create({
+        data: {
+          name: `Teacher ${i + 1}`,
+          email: `teacher${i + 1}@academy.com`,
+          role: 'TEACHER',
+        },
+      })
+    )
+  )
+
+  // 👨‍🎓 Students (100)
+  const students = await Promise.all(
+    Array.from({ length: 100 }).map((_, i) =>
+      prisma.user.create({
+        data: {
+          name: `Student ${i + 1}`,
+          email: `student${i + 1}@academy.com`,
+          role: 'STUDENT',
+        },
+      })
+    )
+  )
+
+  // 📚 Courses (20)
+  const courses = await Promise.all(
+    Array.from({ length: 20 }).map((_, i) =>
+      prisma.course.create({
+        data: {
+          title: `Advanced Course ${i + 1}`,
+          description: `Comprehensive course on topic ${i + 1} with hands-on projects and real-world applications.`,
+          teacherId: teachers[i % teachers.length].id,
+        },
+      })
+    )
+  )
+
+  // 📥 Enrollments (each student in 3-5 courses)
+  for (const student of students) {
+    const numCourses = Math.floor(Math.random() * 3) + 3 // 3-5 courses
+    const randomCourses = courses.sort(() => 0.5 - Math.random()).slice(0, numCourses)
+
+    for (const course of randomCourses) {
+      await prisma.enrollment.create({
+        data: {
+          studentId: student.id,
+          courseId: course.id,
+        },
+      })
     }
-  });
-
-  // 3. Create Demo Students
-  const studentA = await prisma.user.upsert({
-    where: { email: 'ali@akademi.com' },
-    update: {},
-    create: {
-      id: 'student-ali-01',
-      name: "Ali Yılmaz",
-      email: 'ali@akademi.com',
-      role: Role.STUDENT,
-      highContrast: true,
-    }
-  });
-
-  const studentB = await prisma.user.upsert({
-    where: { email: 'ayse@akademi.com' },
-    update: {},
-    create: {
-      id: 'student-ayse-01',
-      name: "Ayşe Kaya",
-      email: 'ayse@akademi.com',
-      role: Role.STUDENT,
-      highContrast: false,
-    }
-  });
-
-  // 4. Create a Demo Material & Exam for Results
-  const material = await prisma.material.create({
-    data: {
-      id: 'material-demo-01',
-      title: "YKS Matematik - Temel Kavramlar",
-      url: "https://example.com/demo.pdf",
-      ownerId: studentA.id,
-    }
-  });
-
-  const exam = await prisma.exam.create({
-    data: {
-      id: 'exam-demo-01',
-      title: "Haftalık Tarama Sınavı",
-      materialId: material.id,
-      content: { questions: [] }
-    }
-  });
-
-  // 5. Generate 60+ Lesson Logs for the last 3 months (Jan - Mar 2026)
-  const books = ["Matematik Soru Bankası", "Türkçe Dil Bilgisi", "Fen Bilimleri", "İngilizce Gramer", "Tyt Tarih"];
-  const logs = [];
-
-  for (let i = 0; i < 60; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - (i * 1.5)); // Historical staggering
-
-    logs.push({
-      date: date,
-      bookName: books[Math.floor(Math.random() * books.length)],
-      pagesRead: Math.floor(Math.random() * 30) + 5,
-      questionsSolved: Math.floor(Math.random() * 80) + 20,
-      duration: Math.floor(Math.random() * 90) + 30,
-      teacherId: teacher.id,
-      studentId: i % 2 === 0 ? studentA.id : studentB.id,
-    });
   }
 
-  await prisma.lessonLog.createMany({ data: logs });
-
-  // 6. Initialize Global Stats for Social Proof
-  const totalSolved = logs.reduce((acc, l) => acc + l.questionsSolved, 0);
-  const totalHours = Math.round(logs.reduce((acc, l) => acc + l.duration, 0) / 60);
-
-  await prisma.systemConfig.create({
-    data: {
-      key: "global_stats",
-      value: {
-        totalSolved: 12450 + totalSolved,
-        totalHours: 450 + totalHours,
-        activeStudents: 85,
-        lastUpdated: new Date().toISOString()
-      }
+  // 📅 Lessons (8 per course)
+  for (const course of courses) {
+    for (let i = 1; i <= 8; i++) {
+      await prisma.lesson.create({
+        data: {
+          title: `Lesson ${i}: ${course.title} Fundamentals`,
+          courseId: course.id,
+          date: new Date(Date.now() + i * 86400000), // Daily lessons
+        },
+      })
     }
-  });
-
-  // 6. Generate Historical Exam Results
-  for (let i = 0; i < 10; i++) {
-     await prisma.result.create({
-       data: {
-         score: Math.floor(Math.random() * 40) + 60, // 60-100 range
-         correctCount: 8,
-         wrongCount: 2,
-         studentId: i % 2 === 0 ? studentA.id : studentB.id,
-         examId: exam.id,
-         completedAt: new Date(Date.now() - (i * 7 * 24 * 60 * 60 * 1000)) // Weekly results
-       }
-     });
   }
 
-  console.log(`🚀 BAŞARILI! 
-    - 1 Hoca ve 2 Öğrenci oluşturuldu.
-    - 60 Ders Kaydı eklendi.
-    - 10 Sınav Sonucu işlendi.
-  `);
+  // 📝 Assignments (5 per course)
+  for (const course of courses) {
+    for (let i = 1; i <= 5; i++) {
+      await prisma.assignment.create({
+        data: {
+          title: `Assignment ${i}: ${course.title} Project`,
+          courseId: course.id,
+          dueDate: new Date(Date.now() + i * 172800000), // Every 2 days
+        },
+      })
+    }
+  }
+
+  // 📤 Submissions
+  const assignments = await prisma.assignment.findMany()
+  for (const student of students) {
+    // Each student submits to some assignments
+    const studentAssignments = assignments.filter(a =>
+      Math.random() > 0.3 // 70% submission rate
+    )
+
+    for (const assignment of studentAssignments) {
+      await prisma.submission.create({
+        data: {
+          studentId: student.id,
+          assignmentId: assignment.id,
+          grade: Math.floor(Math.random() * 100) + 1, // 1-100
+        },
+      })
+    }
+  }
+
+  // 💬 Messages (300)
+  for (let i = 0; i < 300; i++) {
+    const sender = students[Math.floor(Math.random() * students.length)]
+    const receiver = Math.random() > 0.5
+      ? teachers[Math.floor(Math.random() * teachers.length)]
+      : students[Math.floor(Math.random() * students.length)]
+
+    await prisma.message.create({
+      data: {
+        content: `Message ${i + 1}: ${Math.random() > 0.5 ? 'Question about the course' : 'Great lesson today!'}`,
+        senderId: sender.id,
+        receiverId: receiver.id,
+      },
+    })
+  }
+
+  // ⭐ Reviews
+  for (const course of courses) {
+    const enrolledStudents = await prisma.enrollment.findMany({
+      where: { courseId: course.id },
+      include: { student: true }
+    })
+
+    for (const enrollment of enrolledStudents.slice(0, Math.floor(enrolledStudents.length * 0.8))) { // 80% review rate
+      await prisma.review.create({
+        data: {
+          rating: Math.floor(Math.random() * 5) + 1,
+          comment: Math.random() > 0.5 ? "Excellent course!" : "Very helpful and well-structured.",
+          courseId: course.id,
+          studentId: enrollment.studentId,
+        },
+      })
+    }
+  }
+
+  console.log('✅ Database seeded successfully!')
+  console.log(`📊 Created: ${teachers.length} teachers, ${students.length} students, ${courses.length} courses`)
 }
 
 main()
-  .catch((e) => {
-    console.error("Seed Hatası:", e);
-    process.exit(1);
+  .catch(e => {
+    console.error('❌ Seeding failed:', e)
+    process.exit(1)
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect())

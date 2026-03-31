@@ -47,9 +47,9 @@ export const AIPanel: React.FC<AIPanelProps> = ({ suggestions, isLoading = false
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {suggestions.length > 0 ? (
-              suggestions.map((s) => (
+              suggestions.map((s, index) => (
                 <button
-                  key={s.id}
+                  key={s.id || index}
                   onClick={s.action}
                   className="w-full text-left p-5 bg-slate-800 hover:bg-blue-600 border-2 border-slate-700 hover:border-white rounded-3xl cursor-pointer transition-all flex gap-4 items-center group focus:ring-4 focus:ring-blue-500 outline-none"
                   aria-label={`Yapay Zekaya Sor: ${s.label}`}

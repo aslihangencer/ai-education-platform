@@ -7,4 +7,9 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+  datasource: {
+    provider: "postgresql",
+    url: process.env.DATABASE_URL,
+    directUrl: process.env.DIRECT_URL,
+  },
 });

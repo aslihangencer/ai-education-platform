@@ -1,15 +1,13 @@
 "use server";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 /**
  * getStudentAchievementStory:
- * An AI-driven motivational engine that synthesizes raw lesson logs 
- * and exam results into a personalized "Success Story" for the student.
- * Uses Gemini 1.5 Flash for high-speed, empathetic narrations.
+ * Mock AI-driven motivational engine for demonstration.
+ * In production, this would use actual AI API like Gemini.
  */
 export async function getStudentAchievementStory() {
   try {
@@ -23,17 +21,17 @@ export async function getStudentAchievementStory() {
     lastWeek.setDate(lastWeek.getDate() - 7);
 
     const stats = await prisma.lessonLog.findMany({
-      where: { 
-        studentId: studentId, 
-        date: { gte: lastWeek } 
+      where: {
+        studentId: studentId,
+        date: { gte: lastWeek }
       },
       orderBy: { date: 'desc' }
     });
 
     const recentResults = await prisma.result.findMany({
-      where: { 
-        studentId: studentId, 
-        completedAt: { gte: lastWeek } 
+      where: {
+        studentId: studentId,
+        completedAt: { gte: lastWeek }
       },
       include: { exam: true }
     });
@@ -42,33 +40,18 @@ export async function getStudentAchievementStory() {
     const totalSolved = stats.reduce((acc: number, curr: any) => acc + curr.questionsSolved, 0);
     const totalPages = stats.reduce((acc: number, curr: any) => acc + curr.pagesRead, 0);
     const topBook = stats[0]?.bookName || "kitapların";
-    const avgScore = recentResults.length > 0 
+    const avgScore = recentResults.length > 0
       ? Math.round(recentResults.reduce((acc: number, curr: any) => acc + curr.score, 0) / recentResults.length)
       : null;
 
-    // 3. AI Generation via Gemini 1.5 Flash
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // 3. Mock AI Generation - simulates Gemini response
+    const mockStories = [
+      `Harikasın! Bu hafta ${totalSolved} soru çözdün ve ${totalPages} sayfa okudun. ${topBook} kitabındaki çalışmaların gerçekten etkileyici. Devam et, başarı seninle!`,
+      `Tebrikler! Son 7 günde gösterdiğin azim takdire şayan. ${totalSolved} soruyu başarıyla tamamladın. ${avgScore ? `Ortalama puanının %${avgScore} olması` : 'Çalışmaların'} seni gururlandırıyor.`,
+      `Muhteşem bir hafta geçirdin! ${totalPages} sayfa okuma ve ${totalSolved} soru çözme başarını kutluyorum. ${topBook} konusundaki ilerlemen harika görünüyor.`
+    ];
 
-    const prompt = `
-      Sen "Engelsiz Akademi" projesinde yapay zeka tabanlı bir eğitim mentorusun. 
-      Görevin, görme engelli bir öğrenciye haftalık performans özetini sesli okunacak şekilde sunmak.
-      
-      Öğrencinin son 7 günlük verileri:
-      - Toplam Çözülen Soru: ${totalSolved}
-      - Toplam Okunan Sayfa: ${totalPages}
-      - En Çok Çalışılan Kaynak: ${topBook}
-      - Son Sınav Puan Ortalaması: ${avgScore ? `%${avgScore}` : "Sınav girişi yok"}
-      
-      Talimatlar:
-      - 2-3 cümlelik, samimi, cesaret verici ve başarıyı kutlayan bir metin yaz.
-      - Metin sesli asistan tarafından okunacağı için karmaşık sembollerden kaçın.
-      - Öğrenciye ismiyle hitap etme (anonim tut).
-      - Türkçe konuş.
-    `;
-
-    const result = await model.generateContent(prompt);
-    const story = result.response.text().trim();
+    const story = mockStories[Math.floor(Math.random() * mockStories.length)];
 
     return {
       success: true,

@@ -1,10 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+let globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
-// v7 API: Artık üstü çizili (deprecated) metodlar yok
-export const prisma = globalForPrisma.prisma || new PrismaClient({
-  log: ['error', 'warn'],
-});
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query', 'info', 'warn', 'error'],
+    datasources: {
+      db: { url: process.env.DATABASE_URL },
+    },
+  });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

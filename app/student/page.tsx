@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import { motion } from "framer-motion";
 import DashboardShell from "@/components/DashboardShell";
 import { TeacherCard } from "@/components/ui/TeacherCard";
 import { NotificationCard } from "@/components/ui/NotificationCard";
@@ -22,6 +23,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { WelcomeVoice } from "@/features/student/WelcomeVoice";
 import { useAudio } from "@/context/AudioGuideContext";
+import { useAudioHover } from "@/hooks/useAudioHover";
 import { StatCard } from "@/features/student/StatCard";
 import { AchievementBadge } from "@/components/ui/AchievementBadge";
 import { WeeklyTrendChart } from "@/features/teacher/WeeklyTrendChart";
@@ -76,6 +78,8 @@ const demoAISuggestions = [
 
 export default function StudentDashboard() {
   const { speak, stop } = useAudio();
+  const dersKatilAudio = useAudioHover("Derslere katıl butonu. Tıklayarak canlı derslere katılabilirsin.");
+  const materyalAraAudio = useAudioHover("Materyal ara butonu. Yeni ders materyalleri arayabilirsin.");
 
   // Memoize suggestions to prevent redundant re-renders
   const suggestions = React.useMemo(() => {
@@ -115,8 +119,8 @@ export default function StudentDashboard() {
                    Akıllı takvimin güncelendi, bildirimlerin seni bekliyor. İster hemen derslerine katıl, ister yapay zeka asistanıyla pratik yap. 
                  </p>
                  <div className="pt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-                    <Button size="lg" className="h-20 px-12 text-2xl font-black italic bg-blue-600 hover:bg-blue-700 rounded-3xl shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] transition-all hover:translate-y-1 hover:shadow-none"><Play className="mr-3 fill-current" /> DERSE KATIL</Button>
-                    <Button variant="outline" className="h-20 px-12 text-2xl font-black italic border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 border-4 rounded-3xl">
+                    <Button size="lg" className="h-20 px-12 text-2xl font-black italic bg-blue-600 hover:bg-blue-700 rounded-3xl shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] transition-all hover:translate-y-1 hover:shadow-none" {...dersKatilAudio}><Play className="mr-3 fill-current" /> DERSE KATIL</Button>
+                    <Button variant="outline" className="h-20 px-12 text-2xl font-black italic border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 border-4 rounded-3xl" {...materyalAraAudio}>
                       <Search className="mr-3" /> MATERYAL ARA
                     </Button>
                  </div>
@@ -125,11 +129,30 @@ export default function StudentDashboard() {
         </section>
 
         {/* INTERACTIVE STATS ROW (SMART AUDIO GUIDE) */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-10">
-           <StatCard title="Haftalık Soru" value={210} unit="Adet" icon={<HelpCircle size={80} />} />
-           <StatCard title="Okunan Sayfa" value={45} unit="Sayfa" icon={<BookOpen size={80} />} color="bg-blue-50" />
-           <StatCard title="Başarı Puanı" value={92} unit="Puan" icon={<Trophy size={80} />} color="bg-yellow-50" />
-        </section>
+        <motion.section 
+          className="grid grid-cols-1 md:grid-cols-3 gap-10"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2
+              }
+            }
+          }}
+        >
+           <motion.div variants={{ hidden: { y: 50, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
+             <StatCard title="Haftalık Soru" value={210} unit="Adet" icon={<HelpCircle size={80} />} />
+           </motion.div>
+           <motion.div variants={{ hidden: { y: 50, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
+             <StatCard title="Okunan Sayfa" value={45} unit="Sayfa" icon={<BookOpen size={80} />} color="bg-blue-50" />
+           </motion.div>
+           <motion.div variants={{ hidden: { y: 50, opacity: 0 }, visible: { y: 0, opacity: 1 } }}>
+             <StatCard title="Başarı Puanı" value={92} unit="Puan" icon={<Trophy size={80} />} color="bg-yellow-50" />
+           </motion.div>
+        </motion.section>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">

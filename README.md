@@ -2,40 +2,41 @@
 AI-Powered, Equitable Education Platform for Visually Impaired Individuals.
 
 Accessible Academy is an end-to-end solution platform that eliminates barriers for visually impaired students to access educational materials and connects them with the right instructors.
-## ![Screenshot](./public/screenshot.png)
 
-### 🚀 Key Features
-# 1. Voice-Centric Instructor Panel
-Audio Profiles: Instructors introduce themselves via audio and upload sample problem-solving recordings.
+## 🎯 Silicon Valley SaaS Standard Features
 
-Select by Hearing: Students choose instructors not just by reading text, but by hearing their voices and teaching styles.
+### 🎙️ 1. Voice Guide Context (Sesli Rehber)
+- **Insansı Tonla Navigasyon**: Uygulamanın her köşesinde sesli asistan, odaklanan öğeleri doğal bir sesle açıklar
+- **Hover/Focus Otomasyonu**: Mouse veya klavye odağı bir buton, kart veya grafiğe geldiğinde otomatik seslendirme
+- **Web Speech API Entegrasyonu**: Tarayıcı tabanlı, API'siz ses sentezi
 
-Google Meet Integration: One-click lesson scheduling with automated, accessible meeting links.
+### 🧠 2. Gemini 1.5 Pro & Vision Integration (Dijital Göz)
+- **Görsel Yapı Analizi**: PDF'lerdeki tabloları, grafikleri ve mekansal düzenleri anlar
+- **Mock AI Simülasyonu**: Gerçek API kullanmadan profesyonel AI deneyimi
+- **Sesli Görsel Betimleme**: "Sol tarafta hücre bölünmesi şeması var" gibi detaylı açıklamalar
 
-# 2. AI-Powered Material Transformation
-PDF to Audiobook: Academic PDFs are analyzed, cleaned, and converted into audiobooks using natural-sounding AI voices.
+### 🌊 3. Antigravity UI (Süzülen Arayüz)
+- **Framer Motion Animasyonları**: Kartlar ve elementler havada süzülür gibi hareket eder
+- **Neubrutalism Tasarım**: Yüksek kontrast (Siyah-Sarı-Mavi) renk paleti
+- **Stagger Animasyonları**: Elementler sırayla belirerek görsel hiyerarşi oluşturur
 
-Interactive AI Study Buddy: Students can ask questions to the AI about uploaded materials, solve tests verbally, and get hints for challenging parts.
+### 📊 4. Smart Statistics & Achievement Stories
+- **AI Motivasyon Hikayesi**: Haftalık performans verilerini analiz edip kişiselleştirilmiş başarı hikayesi seslendirir
+- **Prisma v7 Entegrasyonu**: Hızlı, güvenli veritabanı sorguları
+- **Sesli Başarı Kutlaması**: "Harikasın Ali, dün limitlerini zorladın!" gibi teşvik edici mesajlar
 
-# 3. Full Accessibility (A11y)
-Built in compliance with WCAG 2.1 standards.
+### 🔒 5. Security & Token Saver (Caching)
+- **Prisma Önbelleği**: Aynı PDF analizlerini tekrar yapmaz, maliyet düşürür
+- **Guardrails**: Hassas verileri işlemez, etik kurallar çerçevesinde çalışır
 
-Full compatibility with screen readers (NVDA, Jaws, VoiceOver).
-
-100% keyboard-controllable interface.
-
-## 🛠 Tech Stack
-Frontend: Next.js 14 (App Router), Tailwind CSS, Radix UI (Accessible Components)
-
-Backend & DB: Supabase (Auth, PostgreSQL, Storage)
-
-Artificial Intelligence:
-
-LLM: Gemini 1.5 Pro (PDF analysis and intelligent assistant)
-
-TTS: OpenAI TTS / Google Cloud Text-to-Speech (Natural narration)
-
-Integration: Google Calendar & Meet API
+## 🛠️ Teknolojik Farklar
+| Özellik | Bizim Uygulama | Sıradan Uygulamalar |
+|---------|----------------|---------------------|
+| Hız | Next.js 15 & Turbopack | Standart React |
+| Veritabanı | Prisma v7 (TypedSQL) | Klasik SQL |
+| Ses | Web Speech API + Mock OpenAI | Sadece tarayıcı desteği |
+| Analiz | Mock Multimodal Gemini | Sadece metin tabanlı |
+| UI | Framer Motion Antigravity | Statik tasarım |
 
 ## 📁 Project Documentation
 You can access detailed planning files below:

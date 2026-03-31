@@ -1,150 +1,108 @@
-'use client';
+﻿"use client";
 
-import React, { useMemo, useEffect, useState } from "react";
-import { Sidebar } from "@/components/ui/Sidebar";
-import { NotificationCard } from "@/components/ui/NotificationCard";
-import { VideoCallPanel } from "@/components/ui/VideoCallPanel";
-import { ChatPanel } from "@/components/ui/ChatPanel";
-import { Calendar } from "@/components/ui/Calendar";
-import { AIPanel } from "@/components/ui/AIPanel";
-import { Zap, TrendingUp, AlertCircle, Sparkles } from 'lucide-react';
-import { getStudentAnalytics } from "@/app/actions/analytics";
-import { DataManagement } from "@/features/teacher/DataManagement";
-import { WeeklyTrendChart } from "@/features/teacher/WeeklyTrendChart";
-import { StudentActionList } from "@/features/teacher/StudentActionList";
-import { ActivityFeed } from "@/components/teacher/ActivityFeed";
-import { StatsCards } from "@/features/teacher/StatsCards";
+import { useState } from "react";
+
+const rows = [
+  { student: "Ayşe K.", subject: "Üslü Sayılar", book: "Karekök Yayınları", pages: 20, questions: 60, duration: "45 dk", status: "✅ Tamam" },
+  { student: "Ahmet Y.", subject: "Modern Fizik", book: "Palme", pages: 15, questions: 40, duration: "30 dk", status: "⏳ Devam" },
+  { student: "Mehmet D.", subject: "Organik Kimya", book: "Aydın", pages: 8, questions: 15, duration: "10 dk", status: "🔴 Yetersiz" },
+];
+
+const getSimulatedAIResponse = (input: string) => {
+  const lowercaseInput = input.toLowerCase();
+
+  if (lowercaseInput.includes("ders") || lowercaseInput.includes("çalış")) {
+    return "Bugün matematik dersinde 40 soru çözdün, harikasın! Trigonometriye odaklanmanı öneririm.";
+  }
+  if (lowercaseInput.includes("meet") || lowercaseInput.includes("toplantı")) {
+    return "Google Meet linkin otomatik olarak oluşturuldu. Öğrencin Ahmet seni bekliyor.";
+  }
+  if (lowercaseInput.includes("pdf") || lowercaseInput.includes("yükle")) {
+    return "PDF başarıyla tarandı. İçerikte 12 adet çözülmüş soru ve 3 adet konu özeti buldum.";
+  }
+
+  return "Seni anlıyorum. Eğitim yolculuğunda her zaman yanındayım!";
+};
+
+const playVoice = (text: string) => {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "tr-TR";
+  speech.pitch = 1.0;
+  speech.rate = 0.9;
+  window.speechSynthesis.speak(speech);
+};
 
 export default function DashboardPage() {
-  const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [analysis, setAnalysis] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
-  // 1. Fetch real analytics data from Server Action (with fallback for demo)
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const result = await getStudentAnalytics("teacher-1");
-        setAnalyticsData(result);
-      } catch (e) {
-        console.warn("Using demo data due to db push pending");
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, []);
-
-  // 2. Memoize suggestions
-  const suggestions = useMemo(() => {
-    return [
-       "Haftalık performans %15 arttı. Harika!",
-       "Yeni Excel verisini kontrol et.",
-       "Ali için Meet randevusu oluştur."
-    ].map((label, index) => ({
-      id: `dashboard-suggest-${index}`,
-      label,
-      action: () => console.log(`AI Action: ${label}`)
-    }));
-  }, []);
+  const handleAnalysis = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const out = getSimulatedAIResponse("ders");
+      setAnalysis(out);
+      playVoice(out);
+      setLoading(false);
+    }, 1200);
+  };
 
   return (
-    <div className="flex h-screen bg-bg-light dark:bg-bg-dark overflow-hidden">
-      <Sidebar />
-      
-      <main className="flex-1 ml-80 p-12 overflow-y-auto space-y-16 animate-in fade-in duration-1000">
-        
-        {/* HERO HEADER */}
-        <header className="flex justify-between items-end border-b-8 border-slate-100 dark:border-slate-800 pb-12">
-          <div className="space-y-4">
-             <div className="inline-flex items-center gap-3 bg-primary/10 text-primary px-6 py-2 rounded-full font-black uppercase italic tracking-widest text-lg">
-                <Zap size={24} className="fill-current" /> SİSTEM AKTİF: EDUPRO v2.5
-             </div>
-             <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 dark:text-white uppercase italic leading-none">
-                HOŞ GELDİNİZ, <br /> <span className="text-primary">EĞİTMEN</span> MODU
-             </h1>
-          </div>
-          <div className="flex gap-6 pb-2">
-             <div className="text-right">
-                <p className="text-4xl font-black text-slate-900 dark:text-white leading-none">42</p>
-                <p className="text-lg font-bold text-slate-400 uppercase tracking-widest italic">Öğrenci</p>
-             </div>
-             <div className="text-right border-l-4 border-slate-100 dark:border-slate-800 pl-6">
-                <p className="text-4xl font-black text-slate-900 dark:text-white leading-none">4.9</p>
-                <p className="text-lg font-bold text-slate-400 uppercase tracking-widest italic">Puan</p>
-             </div>
-          </div>
-        </header>
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-6 shadow">
+        <h1 className="mb-4 text-2xl font-black uppercase tracking-wide">AI Dashboard (Dikey)</h1>
 
-        {/* TOP STATUS ROW (LIVING ACADEMY 2.5) */}
-        {!loading && <StatsCards stats={analyticsData?.stats} />}
-
-        {/* 1. DATA MANAGEMENT HUB */}
-        <section className="space-y-12">
-            <header className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-slate-900 rounded-3xl flex items-center justify-center text-white shadow-xl">
-                   <Zap size={32} />
-                </div>
-                <div>
-                   <h2 className="text-5xl font-black tracking-tight uppercase italic text-slate-900 dark:text-white">VERİ MERKEZİ & ENTEGRASYON</h2>
-                   <p className="text-xl font-bold text-slate-400 mt-2 italic uppercase">Excel ders kayıtlarını sisteme aktar ve yönet.</p>
-                </div>
-            </header>
-            <DataManagement />
-        </section>
-
-        {/* 2. ANALYTICS & MONITORING ROW */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
-            <div className="xl:col-span-8">
-               <section className="space-y-12">
-                  <header className="flex items-center gap-6">
-                     <div className="w-16 h-16 bg-blue-600 rounded-3xl flex items-center justify-center text-white shadow-xl">
-                        <TrendingUp size={36} />
-                     </div>
-                     <div>
-                        <h2 className="text-5xl font-black tracking-tight uppercase italic text-slate-900 dark:text-white">GELİŞİM TRENDİ</h2>
-                        <p className="text-xl font-bold text-slate-400 mt-2 italic uppercase">Son 3 aylık detaylı performans analizi.</p>
-                     </div>
-                  </header>
-                  {loading ? (
-                    <div className="h-[400px] w-full bg-slate-100 animate-pulse rounded-[3rem]" />
-                  ) : (
-                    <WeeklyTrendChart />
-                  )}
-               </section>
-            </div>
-            
-            <div className="xl:col-span-4">
-               <ActivityFeed />
-            </div>
+        <div className="mb-6 rounded-lg border border-black bg-yellow-100 p-4">
+          <p className="font-bold uppercase text-xs">AI Önerisi</p>
+          <p className="mt-1 text-sm italic">Ayşe bugün 50 soru çözdü, harika! Devamında kısa testler ve tekrar öneriyorum.</p>
         </div>
 
-        {/* 3. STUDENT ACTION LIST */}
-        <section className="space-y-12">
-           <StudentActionList students={analyticsData?.students || []} />
-        </section>
-
-        {/* 4. CALENDAR & LIVE MODULE */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
-            <div className="xl:col-span-4">
-               <h2 className="text-4xl font-black tracking-tight uppercase italic mb-8">TAKVİM</h2>
-               <Calendar initialEvents={[]} />
-            </div>
-            <div className="xl:col-span-8 flex flex-col gap-8">
-               <div className="flex items-center gap-6">
-                  <div className="w-10 h-10 bg-red-500 rounded-full animate-pulse" />
-                  <h2 className="text-4xl font-black uppercase italic">CANLI YAYIN MODÜLÜ</h2>
-               </div>
-               <VideoCallPanel />
-            </div>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="bg-slate-900 text-white">
+                <th className="p-2 text-left">Öğrenci</th>
+                <th className="p-2 text-left">Konu</th>
+                <th className="p-2 text-left">Kitap</th>
+                <th className="p-2 text-left">Sayfa</th>
+                <th className="p-2 text-left">Soru</th>
+                <th className="p-2 text-left">Süre</th>
+                <th className="p-2 text-left">Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index} className={index % 2 === 0 ? "bg-slate-100" : "bg-white"}>
+                  <td className="p-2">{row.student}</td>
+                  <td className="p-2">{row.subject}</td>
+                  <td className="p-2">{row.book}</td>
+                  <td className="p-2">{row.pages}</td>
+                  <td className="p-2">{row.questions}</td>
+                  <td className="p-2">{row.duration}</td>
+                  <td className="p-2">{row.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        <AIPanel suggestions={suggestions} isLoading={false} />
+        <div className="mt-6 flex flex-col gap-3">
+          <button
+            onClick={handleAnalysis}
+            disabled={loading}
+            className="rounded bg-blue-600 px-4 py-3 font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+          >
+            {loading ? "AI Analiz Ediyor..." : "Generate AI Analysis"}
+          </button>
 
-        <footer className="pt-20 pb-10 border-t-4 border-slate-100 text-center">
-            <p className="text-xl font-black text-slate-300 uppercase italic tracking-widest">EDU PRO v2.5 INTERACTIVE SaaS ENVIRONMENT</p>
-        </footer>
-
-      </main>
+          {analysis && (
+            <div className="rounded border border-slate-300 bg-slate-100 p-4">
+              <p className="font-semibold">AI Sonucu:</p>
+              <p>{analysis}</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

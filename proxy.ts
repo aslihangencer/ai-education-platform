@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server'; // 'any' yerine doğru tipi kullanıyoruz
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // SaaS mantığı: Burada auth kontrolü veya loglama yapabiliriz
   return NextResponse.next();
 }

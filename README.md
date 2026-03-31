@@ -103,3 +103,8 @@ npm run dev
 Millions of visually impaired students worldwide face difficulties in accessing academic materials and finding suitable mentors. Accessible Academy aims to turn equal opportunity in education into a reality by positioning AI as both an "eye" and an "assistant."
 ## 📄 License
 MIT License
+---
+## ⚡ Installation
+```
+agent-69cc2a51c4a223--mellifluous-granita-a00ae7.netlify.app
+```

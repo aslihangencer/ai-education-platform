@@ -18,3 +18,4 @@ export async function describeImage(file: File) {
   const description = mockDescriptions[Math.floor(Math.random() * mockDescriptions.length)];
 
   return description;
+}

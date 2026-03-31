@@ -1,4 +1,4 @@
-export async function describeImage(file: File) {
+export async function describeImage(file: any) {
   // Mock AI vision response for demonstration
   // In production, this would use actual vision API
 
